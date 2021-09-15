@@ -137,7 +137,7 @@ export default function Home() {
           mr='auto'
           fontSize='2xl'
           mb='2'
-        >Chat da Discordia ! 🤓😈</Heading>
+        >Chat da Discórdia ! 🤓😈</Heading>
         <Flex
           border='1px solid'
           height='460px'
