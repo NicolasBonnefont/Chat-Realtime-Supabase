@@ -123,8 +123,9 @@ export default function Home() {
               onChange={e => setNome(e.target.value)}
               placeholder="Informe seu nome"
               required
-              bg='teal.100'
+              bg='teal.800'
               ref={nomeRef}
+              color='white'
             />
             <Input
               variant="filled"
