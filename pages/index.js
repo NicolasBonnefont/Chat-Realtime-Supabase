@@ -67,8 +67,7 @@ export default function Home() {
 
   return (
     <Flex
-    bg='teal.900'
-
+      bg='teal.900'
       height='100vh'
       justifyContent='center'
       alignItems='center'
@@ -82,12 +81,11 @@ export default function Home() {
           color='teal.100'
         >Chat da Discórdia ! 🤓😈</Heading>
         <Flex
-          
+
           height='460px'
           width='400px'
-          
           marginBottom='20px'
-          padding='15px'
+          padding='2px'
           overflow='auto'
           flexDirection='column-reverse'
           bg='teal.900'
@@ -95,18 +93,17 @@ export default function Home() {
           {
             lista.map((item, id) => (
               <Stack key={id}
-                marginBottom='8px'
+                marginBottom='6px'
                 scroll-snap-align='end'
                 border='1px solid'
                 padding='8px'
-                
                 bg='teal.100'
                 borderTopLeftRadius='18px'
                 borderBottomLeftRadius='18px'
               >
                 <Text color='#000'>Usuário: {item.nome}</Text>
                 <Text color='#000'>Mensagem: {item.mensagem}</Text>
-                <Text fontSize='10px' color='#000'>{new Date(item.updated_at).toLocaleString()}</Text>
+                <Text ml='auto' fontSize='10px' color='#000'>{new Date(item.updated_at).toLocaleString()}</Text>
               </Stack>
             ))
           }
