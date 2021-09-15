@@ -1,17 +1,9 @@
 import { Box, Flex, Heading, Stack, Text } from '@chakra-ui/layout'
 import { Input } from "@chakra-ui/react"
 import { createClient } from '@supabase/supabase-js'
-import { useEffect, useMemo, useRef, useState } from 'react'
-import { Button, ButtonGroup } from "@chakra-ui/react"
-import {
-  FormControl,
-  FormLabel,
-  FormErrorMessage,
-  FormHelperText,
-} from "@chakra-ui/react"
-import { ArrowForwardIcon } from '@chakra-ui/icons'
+import { useEffect, useRef, useState } from 'react'
+import { Button } from "@chakra-ui/react"
 
-// Create a single supabase client for interacting with your database 
 const supabase = createClient(process.env.SUPABASE_API_URL, process.env.SUPABASE_API_KEY)
 
 export default function Home() {
@@ -29,34 +21,20 @@ export default function Home() {
         .select()
       setLista((e) => [...data].reverse())
 
-
       if (error) {
         console.log(error)
       }
 
-      if (!("Notification" in navigator)) {
-        console.log('Esse browser não suporta notificações desktop');
-      } else {
-        if (Notification.permission !== 'denied') {
-          // Pede ao usuário para utilizar a Notificação Desktop
-          await Notification.requestPermission();
-        }
-      }
     }
 
     CarregaChat()
-
 
     supabase
       .from('chat')
       .on('*', payload => {
         setLista((e) => [...e, payload.new].reverse())
-        notify()
-
       })
       .subscribe()
-
-
 
     if (localStorage.getItem('nome') === null || localStorage.getItem('nome') === '') {
       nomeRef.current.disabled = false
@@ -67,42 +45,6 @@ export default function Home() {
 
   }, [])
 
-
-
-  function notify() {
-    if (!window.Notification) {
-      console.log('Este browser não suporta Web Notifications!');
-      return;
-    }
-
-    if (Notification.permission === 'default') {
-      Notification.requestPermission(function () {
-        console.log('Usuário não falou se quer ou não notificações. Logo, o requestPermission pede a permissão pra ele.');
-      });
-    } else if (Notification.permission === 'granted') {
-      console.log('Usuário deu permissão');
-
-      var notification = new Notification('Nova Mensagem', {
-        body: 'Mensagem do corpo da notificação',
-        tag: 'string única que previne notificações duplicadas',
-      });
-      notification.onshow = function () {
-        console.log('onshow: evento quando a notificação é exibida')
-      },
-        notification.onclick = function () {
-          console.log('onclick: evento quando a notificação é clicada')
-        },
-        notification.onclose = function () {
-          console.log('onclose: evento quando a notificação é fechada')
-        },
-        notification.onerror = function () {
-          console.log('onerror: evento quando a notificação não pode ser exibida. É disparado quando a permissão é defualt ou denied')
-        }
-
-    } else if (Notification.permission === 'denied') {
-      console.log('Usuário não deu permissão');
-    }
-  }
   async function enviarMensagem(e) {
 
     e.preventDefault()
@@ -128,10 +70,7 @@ export default function Home() {
       justifyContent='center'
       alignItems='center'
     >
-
-      <Stack
-
-      >
+      <Stack>
         <Heading
           ml='auto'
           mr='auto'
@@ -148,9 +87,7 @@ export default function Home() {
           padding='5px'
           overflow='auto'
           flexDirection='column-reverse'
-
         >
-
           {
             lista.map((item, id) => (
               <Stack key={id}
@@ -159,19 +96,13 @@ export default function Home() {
                 border='1px solid'
                 padding='5px'
                 borderRadius='8px'
-
-
               >
                 <Text color='#000'>Usuário: {item.nome}</Text>
                 <Text color='#000'>Mensagem: {item.mensagem}</Text>
                 <Text fontSize='10px' color='#000'>{new Date(item.updated_at).toLocaleString()}</Text>
-                {/*  {console.log('teste', item)} */}
               </Stack>
-
             ))
           }
-
-          {/* <Text color='#000'>{JSON.stringify(Listamensagem)}</Text> */}
 
         </Flex>
         <Box
@@ -205,8 +136,6 @@ export default function Home() {
           </Stack>
         </Box>
       </Stack>
-
-
     </Flex>
   )
 }
