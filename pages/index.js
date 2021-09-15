@@ -16,24 +16,14 @@ export default function Home() {
   const nomeRef = useRef(null)
 
   useEffect(() => {
-    async function CarregaChat() {
-      const { data, error } = await supabase
-        .from('chat')
-        .select()
-      setLista((e) => [...data].reverse())
 
-      if (error) {
-        console.log(error)
-      }
-
-    }
 
     CarregaChat()
 
     supabase
       .from('chat')
       .on('*', payload => {
-        setLista((e) => [...e, payload.new].reverse())
+        CarregaChat()
       })
       .subscribe()
 
@@ -45,7 +35,17 @@ export default function Home() {
     }
 
   }, [])
+  async function CarregaChat() {
+    const { data, error } = await supabase
+      .from('chat')
+      .select()
+    setLista((e) => [...data].reverse())
 
+    if (error) {
+      console.log(error)
+    }
+
+  }
   async function enviarMensagem(e) {
 
     e.preventDefault()
@@ -72,13 +72,16 @@ export default function Home() {
       justifyContent='center'
       alignItems='center'
     >
-      <Stack>
+      <Stack
+       bg='teal.900'
+      >
         <Heading
           ml='auto'
           mr='auto'
           fontSize='2xl'
           mb='2'
           color='teal.100'
+         
         >Chat da Discórdia ! 🤓😈</Heading>
         <Flex
 
@@ -113,13 +116,14 @@ export default function Home() {
           as='form'
           onSubmit={enviarMensagem}
         >
-          <Stack >
+          <Stack>
             <Input
               variant="filled"
               value={nome}
               onChange={e => setNome(e.target.value)}
               placeholder="Informe seu nome"
               required
+              bg='teal.100'
               ref={nomeRef}
             />
             <Input
@@ -127,7 +131,10 @@ export default function Home() {
               value={mensagem}
               onChange={e => setMensagem(e.target.value)}
               placeholder="Informe sua mensagem"
+              color='white'
+              bg='teal.800'
               required
+              
             />
             <Button
               type='submit'
