@@ -11,6 +11,7 @@ export default function Home() {
   const [lista, setLista] = useState([])
   const [mensagem, setMensagem] = useState('')
   const [nome, setNome] = useState('')
+  const [loading, setLoading] = useState(false)
   const mensagemRef = useRef(null)
   const nomeRef = useRef(null)
 
@@ -48,7 +49,7 @@ export default function Home() {
   async function enviarMensagem(e) {
 
     e.preventDefault()
-
+    setLoading(true)
     await supabase
       .from('chat')
       .insert([
@@ -61,11 +62,13 @@ export default function Home() {
     nomeRef.current.disabled = true
     mensagemRef.current.focus()
     localStorage.setItem('nome', nome)
+    setLoading(false)
   }
 
   return (
     <Flex
-      bg='#eee'
+    bg='teal.900'
+
       height='100vh'
       justifyContent='center'
       alignItems='center'
@@ -76,26 +79,30 @@ export default function Home() {
           mr='auto'
           fontSize='2xl'
           mb='2'
+          color='teal.100'
         >Chat da Discórdia ! 🤓😈</Heading>
         <Flex
-          border='1px solid'
+          
           height='460px'
           width='400px'
-          bg='white'
-          borderRadius='1px'
+          
           marginBottom='20px'
-          padding='5px'
+          padding='15px'
           overflow='auto'
           flexDirection='column-reverse'
+          bg='teal.900'
         >
           {
             lista.map((item, id) => (
               <Stack key={id}
-                marginBottom='10px'
+                marginBottom='8px'
                 scroll-snap-align='end'
                 border='1px solid'
-                padding='5px'
-                borderRadius='8px'
+                padding='8px'
+                
+                bg='teal.100'
+                borderTopLeftRadius='18px'
+                borderBottomLeftRadius='18px'
               >
                 <Text color='#000'>Usuário: {item.nome}</Text>
                 <Text color='#000'>Mensagem: {item.mensagem}</Text>
@@ -130,6 +137,7 @@ export default function Home() {
               colorScheme="teal"
               size="lg"
               ref={mensagemRef}
+              isLoading={loading}
             >
               Enviar mensagem
             </Button>
