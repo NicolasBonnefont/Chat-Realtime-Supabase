@@ -73,7 +73,6 @@ export default function Home() {
       alignItems='center'
     >
       <Stack
-       bg='teal.900'
       >
         <Heading
           ml='auto'
@@ -85,13 +84,12 @@ export default function Home() {
         >Chat da Discórdia ! 🤓😈</Heading>
         <Flex
 
-          height='460px'
-          width='400px'
+          height='400px'
+          width='320px'
           marginBottom='20px'
           padding='2px'
           overflow='auto'
           flexDirection='column-reverse'
-          bg='teal.900'
         >
           {
             lista.map((item, id) => (
@@ -104,8 +102,8 @@ export default function Home() {
                 borderTopLeftRadius='18px'
                 borderBottomLeftRadius='18px'
               >
-                <Text color='#000'>Usuário: {item.nome}</Text>
-                <Text color='#000'>Mensagem: {item.mensagem}</Text>
+                <Text fontSize='12px' color='#000'>Usuário: {item.nome}</Text>
+                <Text fontSize='12px' color='#000'>Mensagem: {item.mensagem}</Text>
                 <Text ml='auto' fontSize='10px' color='#000'>{new Date(item.updated_at).toLocaleString()}</Text>
               </Stack>
             ))
@@ -122,18 +120,16 @@ export default function Home() {
               value={nome}
               onChange={e => setNome(e.target.value)}
               placeholder="Informe seu nome"
-              required
-              bg='teal.800'
+              required             
               ref={nomeRef}
-              color='white'
+              color='black'  
+              
             />
             <Input
               variant="filled"
               value={mensagem}
               onChange={e => setMensagem(e.target.value)}
-              placeholder="Informe sua mensagem"
-              color='white'
-              bg='teal.800'
+              placeholder="Informe sua mensagem"        
               required
               
             />
@@ -142,7 +138,7 @@ export default function Home() {
               colorScheme="teal"
               size="lg"
               ref={mensagemRef}
-              isLoading={loading}
+              isLoading={loading}              
             >
               Enviar mensagem
             </Button>
