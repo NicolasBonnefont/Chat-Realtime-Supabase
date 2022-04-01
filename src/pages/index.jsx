@@ -24,7 +24,7 @@ export default function Home() {
   useEffect(() => {
     supabase
       .from('chat')
-      .on('INSERT', payload => {
+      .on('*', payload => {
         setLista((e) => [...e, payload.new])
       })
       .subscribe()
