@@ -166,7 +166,7 @@ export default function Home() {
           direction='column'
         >
           {
-            data ?
+            !data ?
               <Flex w='100%' direction='column' gap='4'>
                 <Text textAlign='center' fontSize='18px' color='white'>Logar para usar o chat !</Text>
                 <Text textAlign='center' fontSize='18px' color='white'>Utilize umas das redes abaixo para continuar !</Text>
