@@ -1,4 +1,4 @@
-import { Flex, Heading, Link, Stack, Text, Box } from '@chakra-ui/layout'
+import { Box, Flex, Heading, Link, Stack, Text } from '@chakra-ui/layout'
 import { Avatar, Button, IconButton, Input, SkeletonCircle, SkeletonText, Tooltip } from "@chakra-ui/react"
 import { createClient } from '@supabase/supabase-js'
 import { signIn, signOut, useSession } from "next-auth/react"
@@ -12,7 +12,6 @@ export default function Home() {
 
   const [lista, setLista] = useState([])
   const [mensagem, setMensagem] = useState('')
-  const [nome, setNome] = useState('')
   const [loading, setLoading] = useState(false)
   const [loadingLogin, setLoadingLogin] = useState(false)
   const mensagemRef = useRef(null)
@@ -20,7 +19,7 @@ export default function Home() {
 
   const skeleton = [1, 2, 3, 4, 5, 6, 7, 8, 9]
 
-  const { data, status } = useSession()
+  const { data } = useSession()
 
   useEffect(() => {
 
@@ -28,37 +27,36 @@ export default function Home() {
 
     supabase
       .from('chat')
-      .on('*', payload => {
-        CarregaChat()
+      .on('INSERT', payload => {
+
+        setLista((e) => [...e, payload.new])
+
       })
       .subscribe()
 
-
-  }, [])
+  }, [lista])
   async function CarregaChat() {
 
     const { data, error } = await supabase
       .from('chat')
       .select()
 
-    console.log(data)
-
     if (data) {
       setLista((e) => [...data].reverse())
       return
     }
-
 
     if (error) {
       console.log(error)
     }
 
   }
-  async function enviarMensagem(e) {
+  function enviarMensagem(e) {
 
     e.preventDefault()
     setLoading(true)
-    await supabase
+
+    supabase
       .from('chat')
       .insert([
         {
@@ -108,10 +106,10 @@ export default function Home() {
           flexDirection='column-reverse'
         >
           {
-            lista.length > 0 ? lista.map((item, id) => (
+            lista.length > 0 ? lista.map((item, index) => (
 
               <Stack
-                key={id}
+                key={index}
                 w='50%'
                 ml={item.nome == data?.user?.name ? 'auto' : ''}
               >
@@ -124,7 +122,6 @@ export default function Home() {
                   borderRadius='10px'
                   shadow='2xl'
                 >
-
                   <Flex
                     w='100%'
                     direction='column'
