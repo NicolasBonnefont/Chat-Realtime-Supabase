@@ -162,7 +162,7 @@ export default function Home() {
               :
               skeleton.map(item =>
                 <>
-                  <Box padding='6' boxShadow='lg' bg='white' mb='4' borderRadius='10'>
+                  <Box padding='6' boxShadow='lg' bg='white' mb='4' borderRadius='10' w='50%'>
                     <SkeletonCircle size='10' />
                     <SkeletonText mt='4' noOfLines={3} spacing='4' />
                   </Box>
