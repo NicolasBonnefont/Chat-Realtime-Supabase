@@ -1,12 +1,10 @@
-import { Box, Flex, Heading, Stack, Text, Link } from '@chakra-ui/layout'
-import { IconButton, Input, Tooltip } from "@chakra-ui/react"
+import { Flex, Heading, Link, Stack, Text, Box } from '@chakra-ui/layout'
+import { Avatar, Button, IconButton, Input, Tooltip } from "@chakra-ui/react"
 import { createClient } from '@supabase/supabase-js'
+import { signIn, signOut, useSession } from "next-auth/react"
 import { useEffect, useRef, useState } from 'react'
-import { Button } from "@chakra-ui/react"
-import { getSession, signIn, signOut, useSession } from "next-auth/react";
-import { FiGithub, FiUserX } from 'react-icons/fi';
-import { FcGoogle } from 'react-icons/fc';
-import { Avatar, AvatarBadge, AvatarGroup } from '@chakra-ui/react'
+import { FcGoogle } from 'react-icons/fc'
+import { FiGithub, FiUserX } from 'react-icons/fi'
 
 const supabase = createClient(process.env.SUPABASE_API_URL, process.env.SUPABASE_API_KEY)
 
@@ -16,6 +14,7 @@ export default function Home() {
   const [mensagem, setMensagem] = useState('')
   const [nome, setNome] = useState('')
   const [loading, setLoading] = useState(false)
+  const [loadingLogin, setLoadingLogin] = useState(false)
   const mensagemRef = useRef(null)
   const nomeRef = useRef(null)
 
@@ -73,11 +72,17 @@ export default function Home() {
   return (
     <Flex
       bg='teal.900'
-      height='100vh'
       justifyContent='center'
       alignItems='center'
+      w='100%'
+      h='100vh'
+      paddingBottom='2%'
+      paddingTop='1%'
     >
-      <Stack>
+      <Stack
+        w={['95%', '80%', '60%', '50%']}
+        h='85%'
+      >
 
         <Heading
           ml='auto'
@@ -93,8 +98,7 @@ export default function Home() {
           bg='green.200'
           shadow='2xl'
           borderRadius='2xl'
-          height='400px'
-          width='520px'
+          width='100%'
           marginBottom='20px'
           padding='4'
           overflow='auto'
@@ -102,24 +106,52 @@ export default function Home() {
         >
           {
             lista.length > 0 && lista.map((item, id) => (
-              <Stack key={id}>
+              <Stack
+                key={id}
+                w='50%'
+                ml={item.nome == data?.user?.name ? 'auto' : ''}
+
+              >
                 <Stack
                   marginBottom='6px'
                   scroll-snap-align='end'
                   border='1px solid'
                   padding='8px'
-                  bg='white'
-                  borderTopLeftRadius='18px'
-                  borderBottomLeftRadius='18px'
+                  bg='white'//item.nome == data?.user?.name ? 'end' : ''
+                  borderRadius='10px'
+                  shadow='2xl'
                 >
-                  <Avatar
-                    name='Dan Abrahmov'
-                    src={item.avatar ? item.avatar : 'https://bit.ly/dan-abramov'}
 
-                  />
-                  <Text fontSize='12px' color='#000'>Usuário: {item.nome}</Text>
-                  <Text fontSize='12px' color='#000'>Mensagem: {item.mensagem}</Text>
-                  <Text ml='auto' fontSize='10px' color='#000'>{new Date(item.created_at).toLocaleString()}</Text>
+                  <Flex
+                    w='100%'
+                    direction='column'
+                    alignItems={item.nome == data?.user?.name ? 'end' : ''}
+                    gap='2'
+                  >
+                    <Avatar
+                      name='Dan Abrahmov'
+                      src={item.avatar ? item.avatar : 'https://bit.ly/dan-abramov'}
+                    />
+                    <Text
+                      fontSize='12px'
+                      color='#000'
+                    >
+                      {item.nome}
+                    </Text>
+                    <Text
+                      fontSize='12px'
+                      color='#000'
+                    >
+                      {item.mensagem}
+                    </Text>
+                    <Text
+                      fontSize='10px'
+                      color='gray.400'
+                    >
+                      {new Date(item.created_at).toLocaleString()}
+                    </Text>
+                  </Flex>
+
                 </Stack>
 
               </Stack>
@@ -134,32 +166,40 @@ export default function Home() {
           direction='column'
         >
           {
-            !data ?
+            data ?
               <Flex w='100%' direction='column' gap='4'>
-                <Text textAlign='center' fontSize='18px' color='white'>Logar para par usar o chat !</Text>
+                <Text textAlign='center' fontSize='18px' color='white'>Logar para usar o chat !</Text>
                 <Text textAlign='center' fontSize='18px' color='white'>Utilize umas das redes abaixo para continuar !</Text>
                 <Stack direction='row' w='100%'>
 
-                <Tooltip hasArrow label='Google' bg='gray.300' color='black'>
-                  <IconButton
-                    aria-label='Login com Google'
-                    icon={<FcGoogle size={30} />}
-                    bg='white'
-                    size='lg'
-                    onClick={() => signIn('google')}
-                    w='100%'
-                  />
+                  <Tooltip hasArrow label='Google' bg='gray.300' color='black'>
+                    <IconButton
+                      aria-label='Login com Google'
+                      icon={<FcGoogle size={30} />}
+                      bg='white'
+                      size='lg'
+                      isLoading={loadingLogin}
+                      onClick={() => {
+                        setLoadingLogin(true)
+                        signIn('google')
+                      }}
+                      w='100%'
+                    />
                   </Tooltip>
 
                   <Tooltip hasArrow label='GitHub' bg='gray.300' color='black'>
-                  <IconButton
-                    aria-label='Login com Github'
-                    icon={<FiGithub size={30} />}
-                    colorScheme={'purple'}
-                    size='lg'
-                    onClick={() => signIn('github')}
-                    w='100%'
-                  />
+                    <IconButton
+                      aria-label='Login com Github'
+                      icon={<FiGithub size={30} />}
+                      colorScheme={'purple'}
+                      size='lg'
+                      isLoading={loadingLogin}
+                      onClick={() => {
+                        setLoadingLogin(true),
+                          signIn('github')
+                      }}
+                      w='100%'
+                    />
                   </Tooltip>
 
 
@@ -172,10 +212,12 @@ export default function Home() {
                     variant=""
                     value={mensagem}
                     onChange={e => setMensagem(e.target.value)}
-                    placeholder="Informe sua mensagem"
+                    placeholder="Mensagem"
                     required
                     bg='white'
                     color='black'
+                    maxLength={'120'}
+                    h='48px'
                   />
                   <Button
                     type='submit'
@@ -183,15 +225,16 @@ export default function Home() {
                     size="lg"
                     ref={mensagemRef}
                     isLoading={loading}
+                    h='48px'
                   >
                     Enviar mensagem
                   </Button>
                 </Stack>
 
-                <Link ml='auto' mt='4' color='red.400' onClick={signOut} >
+                <Link ml='auto' mt='4' color='white' onClick={signOut} >
                   <Stack direction='row' alignItems='center'>
                     <Text >Deslogar</Text>
-                    <FiUserX />
+                    <FiUserX/>
                   </Stack>
                 </Link>
 
