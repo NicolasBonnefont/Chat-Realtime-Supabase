@@ -22,19 +22,19 @@ export default function Home() {
   const { data } = useSession()
 
   useEffect(() => {
-
-    CarregaChat()
-
     supabase
       .from('chat')
       .on('INSERT', payload => {
-
         setLista((e) => [...e, payload.new])
-
       })
       .subscribe()
 
   }, [lista])
+
+  useEffect(() => {
+    CarregaChat()
+  }, [])
+
   async function CarregaChat() {
 
     const { data, error } = await supabase
