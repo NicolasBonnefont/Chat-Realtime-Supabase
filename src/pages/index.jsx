@@ -1,5 +1,5 @@
 import { Flex, Heading, Link, Stack, Text, Box } from '@chakra-ui/layout'
-import { Avatar, Button, IconButton, Input, Tooltip } from "@chakra-ui/react"
+import { Avatar, Button, IconButton, Input, SkeletonCircle, SkeletonText, Tooltip } from "@chakra-ui/react"
 import { createClient } from '@supabase/supabase-js'
 import { signIn, signOut, useSession } from "next-auth/react"
 import { useEffect, useRef, useState } from 'react'
@@ -17,6 +17,8 @@ export default function Home() {
   const [loadingLogin, setLoadingLogin] = useState(false)
   const mensagemRef = useRef(null)
   const nomeRef = useRef(null)
+
+  const skeleton = [1, 2, 3, 4, 5, 6, 7, 8, 9]
 
   const { data, status } = useSession()
 
@@ -99,18 +101,19 @@ export default function Home() {
           shadow='2xl'
           borderRadius='2xl'
           width='100%'
+          minH='450px'
           marginBottom='20px'
           padding='4'
           overflow='auto'
           flexDirection='column-reverse'
         >
           {
-            lista.length > 0 && lista.map((item, id) => (
+            lista.length > 0 ? lista.map((item, id) => (
+
               <Stack
                 key={id}
                 w='50%'
                 ml={item.nome == data?.user?.name ? 'auto' : ''}
-
               >
                 <Stack
                   marginBottom='6px'
@@ -156,6 +159,16 @@ export default function Home() {
 
               </Stack>
             ))
+              :
+              skeleton.map(item =>
+                <>
+                  <Box padding='6' boxShadow='lg' bg='white' mb='4' borderRadius='10'>
+                    <SkeletonCircle size='10' />
+                    <SkeletonText mt='4' noOfLines={3} spacing='4' />
+                  </Box>
+                </>
+              )
+
           }
 
         </Flex>
@@ -234,7 +247,7 @@ export default function Home() {
                 <Link ml='auto' mt='4' color='white' onClick={signOut} >
                   <Stack direction='row' alignItems='center'>
                     <Text >Deslogar</Text>
-                    <FiUserX/>
+                    <FiUserX />
                   </Stack>
                 </Link>
 
