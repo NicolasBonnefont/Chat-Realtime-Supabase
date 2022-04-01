@@ -51,12 +51,12 @@ export default function Home() {
     }
 
   }
-  function enviarMensagem(e) {
+  async function enviarMensagem(e) {
 
     e.preventDefault()
     setLoading(true)
 
-    supabase
+    await supabase
       .from('chat')
       .insert([
         {
